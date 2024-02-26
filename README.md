@@ -2,6 +2,6 @@
 ---
 ## Usage
 ### Client(master)
-sudo ./Server <ip>
+sudo ./Server [ip]
 ### Server(slave)
-sudo ./Client <server ip>
+sudo ./Client [server ip]

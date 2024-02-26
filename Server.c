@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
 
     ctx = modbus_new_tcp(argv[1], 502);
 
-    printf("--------------------------------------------------\n");
-
     slave_sock = modbus_tcp_listen(ctx, 1);
     printf("Waiting for client(master)... \n");
 
@@ -44,6 +42,7 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        printf("----------------------------------------------\n");
         do
         {
             rc = modbus_receive(ctx, buf);
@@ -51,26 +50,27 @@ int main(int argc, char *argv[])
 
         if (rc < 0)
         {
-            printf("%d\n", rc);
-            printf("error %s\n", modbus_strerror(errno));
+            fprintf(stderr, "%s\n", modbus_strerror(errno));
             close(slave_sock);
             break;
         }
 
-        printf("----------------------------------------------\n");
+        printf("modbus_receive succeed. (rc: %d) \n", rc);
         struct mb_tcp *frame = (struct mb_tcp *)buf;
 
         printf("function code is 0x%02X\n", frame->f_code);
         printf("protocol id : %d\n", frame->p_id);
-        printf("transaction id : %d\n", frame->t_id);
+        printf("transaction id : %d\n", (uint16_t)(buf[0] << 8 | buf[1])); // big endian to little endian
 
         rc = modbus_reply(ctx, buf, rc, map);
         if (rc < 0)
         {
-            printf("%d%d\n", rc, rc);
-            printf("Error %s\n", modbus_strerror(errno));
-            close(slave_sock);
+            fprintf(stderr, "%s\n", modbus_strerror(errno));
             break;
+        }
+        else
+        {
+            printf("modbus_reply succeed. (rc: %d) \n", rc);
         }
     }
 

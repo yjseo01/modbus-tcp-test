@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     while (1)
     {
         printf("\n-------------------------------------------------\n");
-
         uint8_t function_code = inputFunctionCode();
 
         switch (function_code)
@@ -61,10 +60,16 @@ int main(int argc, char *argv[])
             WriteSingleCoil(ctx);
             break;
         case WSR:
-            WriteSingleCoil(ctx);
+            WriteSingleRegister(ctx);
+            break;
         case WMC:
             WriteMultipleCoils(ctx);
+            break;
         default:
+            fprintf(stderr, "Invalid input for function code\n");
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF)
+                ;
             break;
         }
 

@@ -7,7 +7,6 @@
 #include <modbus/modbus-tcp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <unistd.h>
 #include <stdint.h>
 
@@ -20,11 +19,12 @@ extern const int NB_INPUT_REGISTERS;
 /* structure of modbus tcp packet  */
 struct mb_tcp
 {
-    uint16_t t_id;
-    uint16_t p_id;
-    uint16_t len;
-    uint8_t f_code;
-    uint8_t data[];
+    uint16_t t_id;  // transaction id
+    uint16_t p_id;  // protocol id (Modbus TCP is 0)
+    uint16_t len;   // length
+    uint8_t u_id;   // unit id
+    uint8_t f_code; // function code
+    uint8_t data[]; // data
 };
 
 #endif

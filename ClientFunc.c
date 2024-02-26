@@ -7,10 +7,7 @@ uint8_t inputFunctionCode()
     uint8_t function_code;
     printf("function code: ");
     if (scanf("%" SCNx8, &function_code) != 1)
-    {
-        fprintf(stderr, "Invalid input for function code\n");
-        return -1;
-    }
+        return 0;
 
     return function_code;
 }
@@ -142,7 +139,7 @@ void ReadCoils(modbus_t *ctx)
 
     dest = (uint8_t *)malloc(sizeof(uint8_t) * nb);
 
-    printf("reading coils... ");
+    printf("reading coils... \n");
 
     read_coils = modbus_read_bits(ctx, start_addr, nb, dest);
     if (read_coils == nb)
@@ -150,7 +147,7 @@ void ReadCoils(modbus_t *ctx)
         printf("Successful reading to (%d) coils. \n\n", read_coils);
         printf("    coils: ");
         for (int i = 0; i < nb; i++)
-            printf("%d ", dest[i]);
+            printf("%hhu ", dest[i]);
         printf("\n");
     }
     else
@@ -185,7 +182,7 @@ void ReadDiscreteInputs(modbus_t *ctx)
         printf("Successful reading to (%d) coils. \n\n", read_coils);
         printf("    coils: ");
         for (int i = 0; i < nb; i++)
-            printf("%d ", dest[i]);
+            printf("%hhu ", dest[i]);
         printf("\n");
     }
     else
@@ -208,6 +205,8 @@ void WriteSingleCoil(modbus_t *ctx)
     printf("status: ");
     scanf("%d", &status);
 
+    printf("writing bit... \n");
+
     write_bit = modbus_write_bit(ctx, start_addr, status);
 
     if (write_bit == 1)
@@ -222,28 +221,28 @@ void WriteSingleCoil(modbus_t *ctx)
 
 void WriteSingleRegister(modbus_t *ctx)
 {
-    int start_addr;
+    int reg_addr;
     uint16_t data;
-    int write_registers;
+    int write_register;
 
     printf("holding registers address (0 ~ %d) \n\n", NB_REGISTERS - 1);
 
     printf("start address: ");
-    scanf("%d", &start_addr);
+    scanf("%d", &reg_addr);
 
     printf("data (0 ~ 255)\n");
     printf("data: ");
     scanf("%hu", &data);
     printf("\n");
 
-    printf("writing registers...\n");
+    printf("writing register...\n");
 
-    write_registers =
-        modbus_write_register(ctx, start_addr, data);
+    write_register =
+        modbus_write_register(ctx, reg_addr, data);
 
-    if (write_registers == 1)
+    if (write_register == 1)
     {
-        printf("Successful writing to (%d) registers. \n\n", write_registers);
+        printf("Successful writing to (%d) register. \n\n", write_register);
     }
     else
     {
@@ -272,6 +271,8 @@ void WriteMultipleCoils(modbus_t *ctx)
         scanf("%hhd", &(tab_coils[i]));
     }
     printf("\n");
+
+    printf("writing bits...\n");
 
     write_bits = modbus_write_bits(ctx, start_addr, byte_count, tab_coils);
 

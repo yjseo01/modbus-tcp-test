@@ -14,7 +14,7 @@ uint8_t inputFunctionCode()
 
 void WriteMultipleRegisters(modbus_t *ctx)
 {
-    int byte_count;
+    int nb;
     int start_addr;
     uint16_t *tab_reg;
     int write_registers;
@@ -23,13 +23,13 @@ void WriteMultipleRegisters(modbus_t *ctx)
 
     printf("start address: ");
     scanf("%d", &start_addr);
-    printf("byte count: ");
-    scanf("%d", &byte_count);
+    printf("quantity of registers: ");
+    scanf("%d", &nb);
 
-    tab_reg = (uint16_t *)malloc(byte_count * (sizeof(uint16_t)));
+    tab_reg = (uint16_t *)malloc(nb * (sizeof(uint16_t)));
 
     printf("data (0 ~ 255)\n");
-    for (int i = 0; i < byte_count; i++)
+    for (int i = 0; i < nb; i++)
     {
         printf("data[%d]: ", i);
         scanf("%hu", &(tab_reg[i]));
@@ -39,9 +39,9 @@ void WriteMultipleRegisters(modbus_t *ctx)
     printf("writing registers...\n");
 
     write_registers =
-        modbus_write_registers(ctx, start_addr, byte_count, tab_reg);
+        modbus_write_registers(ctx, start_addr, nb, tab_reg);
 
-    if (write_registers == byte_count)
+    if (write_registers == nb)
     {
         printf("Successful writing to (%d) registers. \n\n", write_registers);
     }
@@ -253,19 +253,19 @@ void WriteSingleRegister(modbus_t *ctx)
 void WriteMultipleCoils(modbus_t *ctx)
 {
     int start_addr;
-    int byte_count;
+    int nb;
     uint8_t *tab_coils;
     int write_bits;
     printf("input coils address (0 ~ %d) \n\n", NB_BITS - 1);
 
     printf("start address: ");
     scanf("%d", &start_addr);
-    printf("byte count: ");
-    scanf("%d", &byte_count);
+    printf("quantity of coils: ");
+    scanf("%d", &nb);
 
-    tab_coils = (uint8_t *)malloc(byte_count * (sizeof(uint8_t)));
+    tab_coils = (uint8_t *)malloc(nb * (sizeof(uint8_t)));
     printf("status (0 or 1) \n");
-    for (int i = 0; i < byte_count; i++)
+    for (int i = 0; i < nb; i++)
     {
         printf("status[%d]: ", i);
         scanf("%hhd", &(tab_coils[i]));
@@ -274,9 +274,9 @@ void WriteMultipleCoils(modbus_t *ctx)
 
     printf("writing bits...\n");
 
-    write_bits = modbus_write_bits(ctx, start_addr, byte_count, tab_coils);
+    write_bits = modbus_write_bits(ctx, start_addr, nb, tab_coils);
 
-    if (write_bits == byte_count)
+    if (write_bits == nb)
     {
         printf("Successful writing to (%d) bit. \n\n", write_bits);
     }
